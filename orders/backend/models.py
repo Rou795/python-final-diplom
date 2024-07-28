@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 
 STATE_CHOICES = (
@@ -9,6 +10,7 @@ STATE_CHOICES = (
     ('delivered', 'Доставлен'),
     ('canceled', 'Отменен'),
 )
+
 
 class Shop(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название магазина')
@@ -62,7 +64,7 @@ class ProductParameter(models.Model):
 
 
 class Order(models.Model):
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Пользователь')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='Пользователь')
     bd_date = models.DateTimeField(verbose_name='Дата', auto_now_add=True)
     date_update = models.DateTimeField(verbose_name='Дата обновления', auto_now=True)
     status = models.BooleanField(verbose_name='Статус', choices=STATE_CHOICES, null=False, blank=False)
@@ -83,7 +85,7 @@ class OrderItem(models.Model):
 
 class Contact(models.Model):
     type = models.CharField(max_length=100, verbose_name='Тип')
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='Пользователь')
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, verbose_name='Пользователь')
     value = models.CharField(max_length=100, verbose_name='Значение')
 
     def __str__(self):
