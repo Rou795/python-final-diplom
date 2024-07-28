@@ -1,5 +1,14 @@
 from django.db import models
 
+STATE_CHOICES = (
+    ('basket', 'Статус корзины'),
+    ('new', 'Новый'),
+    ('confirmed', 'Подтвержден'),
+    ('assembled', 'Собран'),
+    ('sent', 'Отправлен'),
+    ('delivered', 'Доставлен'),
+    ('canceled', 'Отменен'),
+)
 
 class Shop(models.Model):
     name = models.CharField(max_length=100, verbose_name='Название магазина')
@@ -56,7 +65,7 @@ class Order(models.Model):
     user = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Пользователь')
     bd_date = models.DateTimeField(verbose_name='Дата', auto_now_add=True)
     date_update = models.DateTimeField(verbose_name='Дата обновления', auto_now=True)
-    status = models.BooleanField(verbose_name='Статус', null=False, blank=False)
+    status = models.BooleanField(verbose_name='Статус', choices=STATE_CHOICES, null=False, blank=False)
 
     def __str__(self):
         return f'{self.user}, {self.bd_date}'
@@ -74,7 +83,7 @@ class OrderItem(models.Model):
 
 class Contact(models.Model):
     type = models.CharField(max_length=100, verbose_name='Тип')
-    user = models.ForeignKey('auth.User', on_delete=models.CASCADE, verbose_name='Пользователь')
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='Пользователь')
     value = models.CharField(max_length=100, verbose_name='Значение')
 
     def __str__(self):
